@@ -1,7 +1,7 @@
 
 body {
     padding: 10px;
-    background-color: antiquewhite;
+    background-color: lightblue;
 }
 
 .listing-container{
@@ -12,3 +12,5 @@ body {
     height: 70px;
     width: auto;
 }
+
+
