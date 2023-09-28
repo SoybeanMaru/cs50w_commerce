@@ -1,0 +1,60 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{listing.item_name}}</h2>
+
+    <img src="{{listing.item_image.url}}" alt=""
+    style="height: 150px;
+           width: auto;">
+    <p>{{listing.item_des}}</p>
+    <p>{{Listing.item_price}}</p>
+
+    <form action="{% url 'watchlist' %}" method="post">
+        {%csrf_token%}
+        <input type="hidden" value="{{listing.pk}}" name="listing_id">
+        <input type="submit" value="Add to Watchlist">
+    </form>
+
+
+    {% if user.is_authenticated %}
+    <form action="{% url 'index' %}" method="post">
+        {%csrf_token%}
+        Bid a price:
+        <input type="number" step="any" name="bid_price">
+        <input type="submit">
+    </form>
+    {% else %}
+    <h4>You must sign in first to be able to bid</h4>
+    {% endif %}
+
+    {% if user.is_authenticated and user == listing.user_id %}
+    <a href="">Close listing</a>
+    {% else %}
+    <p>This biding was made by user {{listing.user_id}}</p>
+    {% endif %}
+    
+    <hr>
+    {% if user.is_authenticated %}
+    <form action="{% url 'comment' listing.pk %}" method="post">
+        {%csrf_token%}
+        Add a comment:
+        <input type="text" name="comment">
+        <input type="submit">
+    </form>
+    {% else %}
+    <h4>You must sign in first to be able to comment</h4>
+    {% endif %}
+
+    <hr>
+    <div style="background-color: antiquewhite;">
+        {% for comment in comments %}
+        <h6>{{comment.user_id}}</h6>
+        <p>{{comment.comm_text}}</p>
+        <hr>
+        {% empty %}
+        <h6>No comments added yet.</h6>
+        {% endfor %}
+    </div>
+    
+    
+{% endblock %}

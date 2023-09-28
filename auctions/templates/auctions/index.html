@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for listing in listings %}
+    <div class="listing-container">
+        <a href="{% url 'listing' listing.pk %}">{{listing.item_name}}</a> <br>
+        <img style="height: 120px; width: auto;" src="{{listing.item_image.url}}" alt="item image">
+        <p>{{listing.item_des}}</p>
+        <p>Starting price: {{listing.item_price}}$</p>
+        <hr>
+    </div>
+    {% empty %}
+    <p>There seems to be no listings.</p>
+    {% endfor %}
+{% endblock %}
