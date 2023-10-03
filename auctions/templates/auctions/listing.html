@@ -7,17 +7,18 @@
     style="height: 150px;
            width: auto;">
     <p>{{listing.item_des}}</p>
-    <p>{{Listing.item_price}}</p>
+    <hr>
+{% if listing.is_closed == False %}
 
-    <form action="{% url 'watchlist' %}" method="post">
-        {%csrf_token%}
-        <input type="hidden" value="{{listing.pk}}" name="listing_id">
-        <input type="submit" value="Add to Watchlist">
-    </form>
-
+    {% if number_of_bids == 0 %}
+    <p>Be the first one to bid!</p>
+    <p>Starting price: {{listing.item_price}}$</p>
+    {% else %}
+    <p>Current largest bid: {{largest_bid}}$</p>
+    {% endif %}
 
     {% if user.is_authenticated %}
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'listing' listing.pk %}" method="post">
         {%csrf_token%}
         Bid a price:
         <input type="number" step="any" name="bid_price">
@@ -27,12 +28,46 @@
     <h4>You must sign in first to be able to bid</h4>
     {% endif %}
 
-    {% if user.is_authenticated and user == listing.user_id %}
-    <a href="">Close listing</a>
+
+    <br>
+
+
+    {% if is_in_watchlist %}
+    <form action="{% url 'watchlist' %}" method="post">
+        {%csrf_token%}
+        <input type="hidden" value="{{listing.pk}}" name="listing_id">
+        <input type="submit" value="Remove from Watchlist" name="REMOVE">
+    </form>
     {% else %}
+    <form action="{% url 'watchlist' %}" method="post">
+        {%csrf_token%}
+        <input type="hidden" value="{{listing.pk}}" name="listing_id">
+        <input type="submit" value="Add to Watchlist">
+    </form>
+    {% endif %}
+
+
+    {% if user.is_authenticated and user == listing.user_id %}
+    <form action="{% url 'listing' listing.pk %}" method="post">
+        {%csrf_token%}
+        <input type="hidden">
+        <input type="submit" value="Close the listing" name="CLOSE">
+    </form>
+    {% else %}
+
     <p>This biding was made by user {{listing.user_id}}</p>
     {% endif %}
-    
+
+{% else %}
+    <h5>This listing has been closed</h5>
+    {% if request.user == winner %}
+      You have won the bid! <a href="">Claim the item</a>
+    {% endif %}
+    {% if winner == None %}
+            <p>Listing was closed before a bid was made</p>
+    {% endif %}
+{% endif %}
+
     <hr>
     {% if user.is_authenticated %}
     <form action="{% url 'comment' listing.pk %}" method="post">

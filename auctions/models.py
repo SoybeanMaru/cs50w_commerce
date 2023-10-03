@@ -11,12 +11,22 @@ class User(AbstractUser):
         return f"{self.username}"
     
 class Listings(models.Model):
+    CATEGORIES = [
+        ('tech', 'Technology'),
+        ('clothing', 'Clothing'),
+        ('house_hold_items', 'House hold items'),
+        ('toys', 'Toys'),
+        ('vehicle', 'Vehicles'),
+        ('no_category', 'No specific category')
+    ]
     item_name = models.CharField(max_length=60)
     item_des = models.TextField(max_length=300)
     item_price = models.FloatField()
     item_image = models.ImageField(upload_to="item_images/", null=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_closed = models.BooleanField(default=False)
+    category = models.CharField(max_length=40, choices=CATEGORIES, default="no_category")
 
     def __str__(self):
         return f"{self.item_name}"
@@ -28,7 +38,7 @@ class Bids(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"User{self.user_id} bidded at listing{self.listing_id} at {self.bid_at} with price: {self.bid_price}"
+        return f"User:{self.user_id} bidded at listing {self.listing_id} at {self.bid_at} with price: {self.bid_price}"
     
 class Comments(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

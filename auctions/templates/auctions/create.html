@@ -5,10 +5,26 @@
     <form action="{% url 'create' %}" method="post" enctype="multipart/form-data">
         {%csrf_token%}
         <input type="text" name="item_name" placeholder="Item name" required>
+        <br>
         <textarea required name="item_des" id="" cols="30" rows="10" placeholder="Item description"></textarea>
         </textarea>
-        <input type="file" name="item_image" accept="image/*" required>
-        <input type="number" step="any" name="item_price" required>
+        <br>
+        Item Image: <input type="file" name="item_image" accept="image/*" required>
+        <br>
+        <br>
+        Item category:
+        <select name="category" id="">
+            <option value="" disabled selected>Choose a category</option>
+            <option value="tech">Technology</option>
+            <option value="clothing">Clothing</option>
+            <option value="house_hold_items">House hold items</option>
+            <option value="toys">Toys</option>
+            <option value="vehicles">Vehicles</option>
+            <option value="no_category">No specific category</option>
+        </select>
+        <br>
+        <br>
+        Starting price: <input type="number" step="any" name="item_price" required>
         <input type="submit" value="Create Listing">
     </form>
     
